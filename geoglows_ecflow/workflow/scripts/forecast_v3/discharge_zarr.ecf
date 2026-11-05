@@ -1,0 +1,30 @@
+#!/bin/bash -l
+%manual
+
+    Build the forecast discharge store from the routed members.
+
+    Calls v3-model-scripts' 4_forecasts/2_discharge_zarr.py, which concatenates
+    the per-member netCDF of route_forecast and writes
+    forecasts15/year=YYYY/month=MM/day=DD/discharge.zarr with Q, Qpercentiles and
+    Qmean in the spec layout (chunks, shards, keepbits from rfs_spec).
+
+    Core-only first test ends here: summaries (3_summary_files.py) and the S3
+    publish are deferred.
+
+    DRAFT - verify on Atos.
+
+%end
+
+%includeonce <ecflow_bash.h>
+%includeonce <suite.h>
+
+set -eu
+rfsv3=$suite_libdir/rfsv3/v3-model-scripts
+py=$rfsv3/.venv/bin/python
+
+"$py" "$rfsv3/4_forecasts/2_discharge_zarr.py" \
+    --initialization "%INITIALIZATION%" \
+    --work-dir "%FORECAST_WORK_DIR%" \
+    --hydrography "%HYDROGRAPHY%" \
+    --out-root "%FORECASTS%" \
+    --jobs "%FORECAST_JOBS%"

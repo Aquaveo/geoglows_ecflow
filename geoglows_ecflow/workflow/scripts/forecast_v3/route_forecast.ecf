@@ -1,0 +1,35 @@
+#!/bin/bash -l
+%manual
+
+    Route every ensemble member of one forecast over the whole world.
+
+    Calls v3-model-scripts' 4_forecasts/1_route_forecast.py, which routes all 51
+    members in one Router (ensemble mode), reads each GRIB once, and writes one
+    netCDF per member to the work directory. Global routing with the O1280
+    weights of routing/global.
+
+    Cold start: no --init-state, so the channels start empty (right for the
+    first test; warm start comes later).
+
+    DRAFT - verify on Atos.
+
+%end
+
+%includeonce <ecflow_bash.h>
+%includeonce <suite.h>
+
+set -eu
+rfsv3=$suite_libdir/rfsv3/v3-model-scripts
+py=$rfsv3/.venv/bin/python
+
+initialization=%INITIALIZATION%          # YYYY-MM-DDTHH, a suite variable
+ifs_dir=$SCRATCH/ifs_enfo/%FORECAST_YMD%  # where retrieve_ifs wrote the GRIB
+work_dir=%FORECAST_WORK_DIR%             # per-member netCDF output
+routing=%ROUTING%                        # routing/ (uses global/) from the bucket
+
+"$py" "$rfsv3/4_forecasts/1_route_forecast.py" \
+    --initialization "$initialization" \
+    --ifs "$ifs_dir" \
+    --routing "$routing" \
+    --work-dir "$work_dir" \
+    --threads "%FORECAST_THREADS%"

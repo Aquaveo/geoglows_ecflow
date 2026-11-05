@@ -21,6 +21,18 @@ Two layers, kept separate:
 geoglows-ecflow **calls** v3-model-scripts; it does not duplicate the
 computation.
 
+## Decisions (locked 2026-11-05)
+
+- **Forcing:** `ecmwf_grib` on the native **O1280** reduced-gaussian GRIB, kept as
+  GRIB (no `cdo -R` regrid). Routed globally in one job.
+- **First-test scope:** core only - `retrieve_ifs -> route_forecast ->
+  discharge_zarr`. Summaries and S3 publish are deferred.
+- **ML step:** deferred. Build and test the core pipeline first; add the ML
+  inference step (and PyTorch) once its design is settled.
+- **Members:** 51 - control 0, perturbed 1..50. The old HRES member 52 is dropped.
+- **Warm-state:** cold start for the first test; warm start later.
+- **Deploy:** a fresh ecflow server for v3 testing, separate from operations.
+
 ## Forecast task tree (per cycle)
 
 Routing is global (one job, all 51 members) as v3-model-scripts does it, not

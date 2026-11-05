@@ -1,0 +1,45 @@
+#!/bin/bash -l
+%manual
+
+    Build the RFS v3 environment for the forecast suite.
+
+    Clones river-route (v3) and v3-model-scripts side by side and installs them
+    with uv, as v3-model-scripts' README prescribes ("uv sync installs both ...
+    and this project"). The forecast tasks run its scripts from this checkout
+    and its .venv.
+
+    No PyTorch: the ML inference step is deferred for the first test.
+
+    DRAFT - the module names and uv availability are Atos-specific and must be
+    verified on the machine. Fallback if the pip eccodes/geopandas native
+    libraries misbehave: build a conda-forge env (python-eccodes, geopandas, and
+    the rest of the proven stack) and `pip install -e ../river-route .` into it.
+
+  OPERATORS
+
+    Leave Aborted. Inform the analyst.
+
+%end
+
+%includeonce <ecflow_bash.h>
+%includeonce <suite.h>
+
+set -eu
+
+# river-route and v3-model-scripts live side by side, per their README
+rfsv3_root=$suite_libdir/rfsv3
+rm -rf "$rfsv3_root"
+mkdir -p "$rfsv3_root"
+cd "$rfsv3_root"
+
+module load python3   # Atos module providing python3.14 and uv; adjust on Atos
+
+git clone --branch v3 https://github.com/rileyhales/river-route.git
+git clone https://github.com/river-forecast-system/v3-model-scripts.git
+
+cd v3-model-scripts
+# uv sync builds .venv with Python 3.14, river-route (from ../river-route),
+# v3-model-scripts and all deps from uv.lock. The forecast tasks use this .venv.
+uv sync
+
+echo "built $rfsv3_root/v3-model-scripts/.venv"

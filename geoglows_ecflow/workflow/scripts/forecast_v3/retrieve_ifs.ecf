@@ -1,0 +1,25 @@
+#!/bin/bash -l
+%manual
+
+    Retrieve the IFS ensemble runoff for one forecast initialization.
+
+    Calls v3-model-scripts' 4_forecasts/download_ifs.sh, which MARS-retrieves the
+    control (stream=oper, type=fc) and 50 perturbed members (stream=enfo,
+    type=pf, number=1/to/50) as native O1280 GRIB and writes
+    cf_00_<ymd>.grib and pf_01..50_<ymd>.grib to $SCRATCH/ifs_enfo/<ymd>.
+
+    51 members, no HRES. The GRIB is kept as GRIB (no cdo regrid): river-route
+    reads it directly with the ecmwf_grib forcing.
+
+    DRAFT - verify on Atos.
+
+%end
+
+%includeonce <ecflow_bash.h>
+%includeonce <suite.h>
+
+set -eu
+rfsv3=$suite_libdir/rfsv3/v3-model-scripts
+ymd=%FORECAST_YMD%   # YYYYMMDD of the 00 UTC run; a suite variable (Phase 2 wiring)
+
+bash "$rfsv3/4_forecasts/download_ifs.sh" "$ymd"
