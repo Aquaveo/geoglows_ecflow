@@ -22,8 +22,10 @@ set -eu
 rfsv3=$suite_libdir/rfsv3/v3-model-scripts
 py=$rfsv3/.venv/bin/python
 
-initialization=%INITIALIZATION%          # YYYY-MM-DDTHH, a suite variable
-ifs_dir=$SCRATCH/ifs_enfo/%FORECAST_YMD%  # where retrieve_ifs wrote the GRIB
+ymd=%YMD%                                 # YYYYMMDD of this cycle
+hh=%EMOS_BASE%                            # cycle hour ("00"), from NominalTime
+initialization="${ymd:0:4}-${ymd:4:2}-${ymd:6:2}T${hh}"  # YYYY-MM-DDTHH
+ifs_dir=$SCRATCH/ifs_enfo/$ymd           # where retrieve_ifs wrote the GRIB
 work_dir=%FORECAST_WORK_DIR%             # per-member netCDF output
 routing=%ROUTING%                        # routing/ (uses global/) from the bucket
 

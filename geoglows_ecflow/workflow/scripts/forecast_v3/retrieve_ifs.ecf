@@ -20,6 +20,6 @@
 
 set -eu
 rfsv3=$suite_libdir/rfsv3/v3-model-scripts
-ymd=%FORECAST_YMD%   # YYYYMMDD of the 00 UTC run; a suite variable (Phase 2 wiring)
+ymd=%YMD%   # YYYYMMDD of this cycle, from the main family's RepeatDate
 
 bash "$rfsv3/4_forecasts/download_ifs.sh" "$ymd"

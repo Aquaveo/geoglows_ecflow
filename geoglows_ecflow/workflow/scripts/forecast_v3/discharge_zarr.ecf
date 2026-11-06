@@ -22,8 +22,12 @@ set -eu
 rfsv3=$suite_libdir/rfsv3/v3-model-scripts
 py=$rfsv3/.venv/bin/python
 
+ymd=%YMD%                                 # YYYYMMDD of this cycle
+hh=%EMOS_BASE%                            # cycle hour ("00"), from NominalTime
+initialization="${ymd:0:4}-${ymd:4:2}-${ymd:6:2}T${hh}"  # YYYY-MM-DDTHH
+
 "$py" "$rfsv3/4_forecasts/2_discharge_zarr.py" \
-    --initialization "%INITIALIZATION%" \
+    --initialization "$initialization" \
     --work-dir "%FORECAST_WORK_DIR%" \
     --hydrography "%HYDROGRAPHY%" \
     --out-root "%FORECASTS%" \
