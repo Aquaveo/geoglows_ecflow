@@ -93,3 +93,33 @@ geoglows-ecflow. This branch delegates them to v3-model-scripts instead:
 Full runs need ECMWF access (MARS, modules, troika). Locally we can validate the
 environment build and script invocation against bucket data with a cold start;
 the real validation is on Atos.
+
+## Status for review (2026-11-06)
+
+Built on this branch:
+
+- This design doc (the approach and the locked decisions).
+- Draft task scripts in `geoglows_ecflow/workflow/scripts/forecast_v3/`:
+  `build_venv.ecf`, `retrieve_ifs.ecf`, `route_forecast.ecf`,
+  `discharge_zarr.ecf` - each a thin wrapper around a v3-model-scripts step.
+  Drafts to verify on Atos.
+
+Remaining before a first run:
+
+1. **The v3 suite builder** - the main remaining code. The current
+   `builders/builder.py` assembles the full v2 operational tree; v3 core needs a
+   much simpler one: `make` (build_venv) then, per cycle, `retrieve_ifs ->
+   route_forecast -> discharge_zarr`, routed globally (no per-VPU tasks, no
+   prep, no nc_to_zarr).
+2. A real `config.yaml` with the Atos paths, troika destinations, and the fresh
+   v3 ecflow server (copied/filled from `config.example.yaml`).
+3. `build_venv.ecf` module/uv specifics, once the Atos modules are known
+   (`module avail python3 conda uv ...`).
+
+Needed from Atos (machine-specific values, not code): the real operational
+`config.yaml` and `troika.yml`, `module avail` output, whether `uv` is present,
+the `$SCRATCH/$PERM` paths, and the current deployed suite `.def` to mirror.
+
+Deferred by decision: the ML step (+ PyTorch), `summary_files`, and the S3
+publish.
+
