@@ -8,6 +8,9 @@
     and this project"). The forecast tasks run its scripts from this checkout
     and its .venv.
 
+    v3-model-scripts is fetched at V3_SCRIPTS_REF (a suite variable); pin it to
+    a release tag for ops, defaults to "main".
+
     No PyTorch: the ML inference step is deferred for the first test.
 
     DRAFT - the module names and uv availability are Atos-specific and must be
@@ -35,7 +38,8 @@ cd "$rfsv3_root"
 module load python3   # Atos module providing python3.14 and uv; adjust on Atos
 
 git clone --branch v3 https://github.com/rileyhales/river-route.git
-git clone https://github.com/river-forecast-system/v3-model-scripts.git
+git clone --branch %V3_SCRIPTS_REF% \
+    https://github.com/river-forecast-system/v3-model-scripts.git
 
 cd v3-model-scripts
 # uv sync builds .venv with Python 3.14, river-route (from ../river-route),

@@ -135,6 +135,8 @@ def test_suite_declares_the_variables_the_scripts_read(defs):
         suite.find_variable("FORECAST_WORK_DIR").value()
         == "%FORECAST_WORKROOT%/%YMD%/%EMOS_BASE%"
     )
+    # v3-model-scripts ref defaults to main until a release tag is pinned.
+    assert suite.find_variable("V3_SCRIPTS_REF").value() == "main"
 
 
 def test_cycles_config_adds_a_second_cycle():

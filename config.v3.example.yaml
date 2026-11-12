@@ -14,6 +14,7 @@ mode: test                 # 'test' or 'prod'
 first_date: "YYYYMMDD"
 last_date: "YYYYMMDD"      # optional; defaults far in the future
 cycles: ["00"]             # daily cycles to run; download_ifs.sh is 00Z-oriented
+v3_scripts_ref: main       # v3-model-scripts git ref to fetch; pin to a release tag
 
 # RFS v3 data locations on Atos (routing/ + hydrography/ staged from the bucket).
 routing: /path/to/routing            # routing/ (uses global/ O1280 weights)

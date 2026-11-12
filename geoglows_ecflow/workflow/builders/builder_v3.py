@@ -88,6 +88,10 @@ class Builder(ComfiesBaseBuilder):
         jobs = cfg.get("forecast_jobs", type=int, default=4)
         suite.add_variable("FORECAST_THREADS", threads)
         suite.add_variable("FORECAST_JOBS", jobs)
+        # Git ref of v3-model-scripts build_venv fetches; pin to a release tag.
+        suite.add_variable(
+            "V3_SCRIPTS_REF", cfg.get("v3_scripts_ref", default="main")
+        )
 
         # make: build the v3 environment once per suite install.
         n_make = Family("make")
